@@ -246,17 +246,17 @@ numpy.save('numpy_validation_datasets/late_microexpfusenet_nval_labels.npy', nva
 history = model.fit([etrain_images, ntrain_images], etrain_labels, validation_data = ([etraining_set, ntraining_set], eye_traininglabels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
 # Loading Load validation set from numpy array
-"""
+
 eimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_eval_images.npy')
 nimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_nval_images.npy')
 labels = numpy.load('numpy_validation_datasets/late_microexpfusenet_eval_labels.npy')
-"""
+
 
 # Finding Confusion Matrix using pretrained weights
-"""
+
 predictions = model.predict([eimg, nimg])
 predictions_labels = numpy.argmax(predictions, axis=1)
 validation_labels = numpy.argmax(labels, axis=1)
 cfm = confusion_matrix(validation_labels, predictions_labels)
 print (cfm)
-"""
+

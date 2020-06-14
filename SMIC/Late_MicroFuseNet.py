@@ -48,7 +48,7 @@ def annotate_landmarks(img, landmarks, font_scale = 0.4):
 negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
-
+"""
 eye_training_list = []
 nose_training_list = []
 
@@ -186,7 +186,7 @@ ntraining_set = numpy.load('numpy_training_datasets/late_microexpfusenetnoseimag
 etraining_set = numpy.load('numpy_training_datasets/late_microexpfuseneteyeimages.npy')
 eye_traininglabels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
 nose_traininglabels = numpy.load('numpy_training_datasets/late_microexpfuseneteyelabels.npy')
-"""
+
 
 # Late MicroExpFuseNet Model
 eye_input = Input(shape = (1, 32, 32, 18))
@@ -206,8 +206,8 @@ nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
 ract_3 = Activation('relu')(nose_conv)
 maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
 ract_4 = Activation('relu')(maxpool_2)
-dropout_2 = Dropout(0.5)(ract_4)
-flatten_2 = Flatten()(dropout_2)
+dropout_6 = Dropout(0.5)(ract_4)
+flatten_2 = Flatten()(dropout_6)
 dense_3 = Dense(1024, )(flatten_2)
 dropout_4 = Dropout(0.5)(dense_3)
 dense_4 = Dense(128, )(dropout_4)

@@ -243,7 +243,7 @@ numpy.save('numpy_validation_datasets/late_microexpfusenet_eval_labels.npy', eva
 numpy.save('numpy_validation_datasets/late_microexpfusenet_nval_labels.npy', nvalidation_labels)
 
 # Training the model
-history = model.fit([etrain_images, ntrain_images], etrain_labels, validation_data = ([etraining_set, ntraining_set], eye_traininglabels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 250, shuffle=True)
+history = model.fit([etrain_images, ntrain_images], etrain_labels, validation_data = ([etraining_set, ntraining_set], eye_traininglabels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
 # Loading Load validation set from numpy array
 """

@@ -19,9 +19,9 @@ image_rows, image_columns, image_depth = 64, 64, 18
 
 training_list = []
 
-negativepath = '../../Dataset/Negative/'
-positivepath = '../../Dataset/Positive/'
-surprisepath = '../../Dataset/Surprise/'
+negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
+positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
+surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
 
 directorylisting = os.listdir(negativepath)
 for video in directorylisting:

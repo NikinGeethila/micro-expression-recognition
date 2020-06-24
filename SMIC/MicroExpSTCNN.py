@@ -6,6 +6,7 @@ from sklearn.metrics import confusion_matrix
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution3D, MaxPooling3D
+from keras.layers import PReLU
 from keras.optimizers import SGD, RMSprop
 from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils, generic_utils
@@ -74,11 +75,21 @@ for video in directorylisting:
 training_list = numpy.asarray(training_list)
 trainingsamples = len(training_list)
 traininglabels = numpy.zeros((trainingsamples, ), dtype = int)
+print(len(traininglabels))
 
-traininglabels[0:66] = 0
-traininglabels[66:113] = 1
-traininglabels[113:156] = 2
-
+# traininglabels[0:66] = 0
+# traininglabels[66:113] = 1
+# traininglabels[113:156] = 2
+for typepath in (negativepath,positivepath,surprisepath):
+    directorylisting = os.listdir(typepath)
+    print(typepath)
+    for video in range(len(directorylisting)):
+        if typepath==negativepath:
+            traininglabels[video]=0
+        if typepath==positivepath:
+            traininglabels[video]=1
+        if typepath==surprisepath:
+            traininglabels[video]=2
 traininglabels = np_utils.to_categorical(traininglabels, 3)
 
 training_data = [training_list, traininglabels]
@@ -104,11 +115,13 @@ traininglabels =numpy.load('numpy_training_datasets/microexpstcnn_labels.npy')
 
 # MicroExpSTCNN Model
 model = Sequential()
-model.add(Convolution3D(32, (3, 3, 15), input_shape=(1, image_rows, image_columns, image_depth), activation='relu'))
+model.add(Convolution3D(32, (3, 3, 15), input_shape=(1, image_rows, image_columns, image_depth)))
+model.add(PReLU(alpha_initializer="zeros"))
 model.add(MaxPooling3D(pool_size=(3, 3, 3)))
 model.add(Dropout(0.5))
 model.add(Flatten())
-model.add(Dense(128, init='normal', activation='relu'))
+model.add(Dense(128, init='normal'))
+model.add(PReLU(alpha_initializer="zeros"))
 model.add(Dropout(0.5))
 model.add(Dense(3, init='normal'))
 model.add(Activation('softmax'))
@@ -129,23 +142,22 @@ model.load_weights('weights_microexpstcnn/weights-improvement-40-0.69.hdf5')
 train_images, validation_images, train_labels, validation_labels =  train_test_split(training_set, traininglabels, test_size=0.2, random_state=4)
 
 # Save validation set in a numpy array
-numpy.save('numpy_validation_dataset/microexpstcnn_val_images.npy', validation_images)
-numpy.save('numpy_validation_dataset/microexpstcnn_val_labels.npy', validation_labels)
+numpy.save('numpy_validation_datasets/microexpstcnn_val_images.npy', validation_images)
+numpy.save('numpy_validation_datasets/microexpstcnn_val_labels.npy', validation_labels)
 
 # Load validation set from numpy array
 """
 validation_images = numpy.load('numpy_validation_datasets/microexpstcnn_val_images.npy')
-validation_labels = numpy.load('numpy_validation_dataset/microexpstcnn_val_labels.npy')
+validation_labels = numpy.load('numpy_validation_datasets/microexpstcnn_val_labels.npy')
 """
 
 # Training the model
-hist = model.fit(train_images, train_labels, validation_data = (validation_images, validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
+history = model.fit(train_images, train_labels, validation_data = (validation_images, validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
 # Finding Confusion Matrix using pretrained weights
-"""
+
 predictions = model.predict(validation_images)
 predictions_labels = numpy.argmax(predictions, axis=1)
 validation_labels = numpy.argmax(validation_labels, axis=1)
 cfm = confusion_matrix(validation_labels, predictions_labels)
 print (cfm)
-"""
